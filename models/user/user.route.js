@@ -1,4 +1,4 @@
-import { getUserByEmail, signin, signup } from './user.controller.js';
+import { getUserByEmail, getUserById, signin, signup } from './user.controller.js';
 import { getUserByEmailValidation, signinValidation, signupValidation } from './user.validation.js';
 
 import { authenticateToken } from '../../middlewares/authMiddleware.js';
@@ -9,5 +9,7 @@ const router = express.Router();
 
 router.post('/signup', validate(signupValidation), signup);
 router.post('/signin', validate(signinValidation), signin);
+router.get('/user', authenticateToken,  getUserById);
 router.get('/user/email', authenticateToken, validate(getUserByEmailValidation), getUserByEmail);
+
 export default router;

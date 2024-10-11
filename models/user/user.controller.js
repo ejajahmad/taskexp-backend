@@ -54,3 +54,39 @@ export const getUserByEmail = async (req, res) => {
         res.status(500).json({ message: 'Something went wrong' });
     }
 };
+
+export const getUserById = async (req, res) => {
+    try {
+        const token = req.headers.authorization?.split(' ')[1]; // Bearer <token>
+
+        if (!token) {
+            return res.status(401).json({ message: 'No token provided' });
+        }
+
+        // Verify the token
+        const decoded = jwt.verify(token, process.env.JWT_SECRET);
+
+        // Extract user ID from the token
+        const userId = decoded.id;
+
+        // Fetch the user from the database using the user ID
+        const user = await UserModel.findUserById(userId);
+
+        if (!user) {
+            return res.status(404).json({ message: 'User not found' });
+        }
+
+        // Respond with user data
+        res.status(200).json({
+            id: user.id,
+            name: user.name,
+            email: user.email,
+        });
+
+    }
+    catch (error) {
+        console.log(error);
+        res.status(500).json({ message: 'Something went wrong' });
+    }
+
+}

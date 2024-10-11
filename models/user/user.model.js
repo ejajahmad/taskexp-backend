@@ -18,6 +18,15 @@ export default {
         }
     },
 
+    findUserById: async (id) => {
+        try {
+            return await prisma.user.findUnique({ where: { id } });
+        } catch (error) {
+            console.log(error);
+            throw new Error('Error finding user by id');
+        }
+    },
+
     findUserByEmail: async (email) => {
         try {
             return await prisma.user.findUnique({ where: { email } });
